@@ -2,34 +2,35 @@ const summary = [
   { label: 'Saldo bulan ini', value: 'Rp 8.450.000', tone: 'good' },
   { label: 'Pemasukan', value: 'Rp 4.000.000', tone: 'info' },
   { label: 'Pengeluaran', value: 'Rp 2.640.000', tone: 'warning' },
-  { label: 'Target tabungan', value: 'Rp 500.000', tone: 'good' }
+  { label: 'Target tabungan', value: 'Rp 500.000', tone: 'good' },
 ];
 
 const transactions = [
   { type: 'Pemasukan', category: 'Gaji', amount: 'Rp 4.000.000', note: 'Gaji bulanan' },
   { type: 'Pengeluaran', category: 'Sewa', amount: 'Rp 1.400.000', note: 'Sewa rumah' },
-  { type: 'Pengeluaran', category: 'Makanan', amount: 'Rp 850.000', note: 'Kebutuhan harian' },
-  { type: 'Investasi', category: 'Mutual Fund', amount: 'Rp 550.000', note: 'Investasi' }
+  { type: 'Pengeluaran', category: 'Makanan', amount: 'Rp 850.000', note: 'Belanja kebutuhan harian' },
+  { type: 'Investasi', category: 'Mutual Fund', amount: 'Rp 550.000', note: 'Investasi bulanan' },
+  { type: 'Tabungan', category: 'Darurat', amount: 'Rp 500.000', note: 'Tabungan darurat' },
 ];
 
 const learning = [
   { language: 'English', topic: 'Daily Conversation', time: '07:30 - 08:00', progress: '78%' },
   { language: 'Deutsch', topic: 'Grammar + Vocabulary', time: '18:30 - 19:00', progress: '65%' },
-  { language: 'Mandarin', topic: 'Pinyin + Hanzi', time: '20:00 - 20:30', progress: '71%' }
+  { language: 'Mandarin', topic: 'Pinyin + Hanzi', time: '20:00 - 20:30', progress: '71%' },
 ];
 
 const reminders = [
   'Catat transaksi sebelum 21:00',
-  'Rekap keuangan dan saldo',
+  'Rekap saldo dan target tabungan',
   'Belajar bahasa 30 menit',
-  'Backup Excel setiap akhir pekan'
+  'Backup Excel akhir pekan',
 ];
 
 export default function HomePage() {
   return (
     <main style={{ minHeight: '100vh', background: '#f4f7fb', color: '#0f172a', fontFamily: 'Arial, sans-serif', padding: '32px' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32, flexWrap: 'wrap', gap: 16 }}>
           <div>
             <p style={{ margin: 0, fontSize: 12, letterSpacing: 1, textTransform: 'uppercase', color: '#64748b' }}>Management System</p>
             <h1 style={{ margin: '8px 0 0', fontSize: 36 }}>Finance + Language Learning</h1>

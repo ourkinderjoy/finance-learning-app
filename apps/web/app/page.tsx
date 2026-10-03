@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import type { Request, Response } from 'express';
-import { dashboardData, financeTransactions, learningSchedule, reminders } from './data.js';
+import { dashboardData, financeTransactions, learningSchedule, reminders, budgets } from './data.js';
 
 dotenv.config();
 
@@ -39,12 +39,19 @@ app.post('/api/transactions', (req: Request, res: Response) => {
     category,
     amount: Number(amount),
     note: note || 'Transaksi baru',
-    date: date || new Date().toISOString().slice(0, 10)
+    date: date || new Date().toISOString().slice(0, 10),
   };
 
   financeTransactions.unshift(newTransaction);
-
   return res.status(201).json({ message: 'Transaksi berhasil ditambahkan.', data: newTransaction });
+});
+
+app.get('/api/budgets', (_req: Request, res: Response) => {
+  res.json(budgets);
+});
+
+app.get('/api/reminders', (_req: Request, res: Response) => {
+  res.json(reminders);
 });
 
 app.get('/api/learning', (_req: Request, res: Response) => {
@@ -64,7 +71,7 @@ app.get('/api/excel-template', (_req: Request, res: Response) => {
       monthlyExpense: dashboardData.monthlyExpense,
       monthlySavings: dashboardData.monthlySavings,
       transactions: financeTransactions,
-      learning: learningSchedule
+      learning: learningSchedule,
     });
   }
 });

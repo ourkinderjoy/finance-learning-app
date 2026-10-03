@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Finance Learning App',
-  description: 'Finance dashboard and language learning planner'
+  description: 'Finance dashboard and language learning planner',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

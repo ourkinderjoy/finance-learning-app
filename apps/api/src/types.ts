@@ -9,12 +9,30 @@ export type Transaction = {
   date: string;
 };
 
+export type Budget = {
+  id: number;
+  category: string;
+  limit: number;
+  used: number;
+  unit: string;
+};
+
+export type LearningLanguage = 'English' | 'Deutsch' | 'Mandarin';
+
 export type LearningSchedule = {
-  language: 'English' | 'Deutsch' | 'Mandarin';
+  id: number;
+  language: LearningLanguage;
   topic: string;
   time: string;
   progress: number;
   level: 'Beginner' | 'Intermediate' | 'Advanced';
+};
+
+export type Reminder = {
+  id: number;
+  title: string;
+  time: string;
+  enabled: boolean;
 };
 
 export type DashboardData = {
@@ -23,6 +41,7 @@ export type DashboardData = {
   monthlyExpense: number;
   monthlySavings: number;
   transactions: Transaction[];
+  budgets: Budget[];
   learning: LearningSchedule[];
-  reminders: string[];
+  reminders: Reminder[];
 };
