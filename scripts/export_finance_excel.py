@@ -1,27 +1,56 @@
-import json
-from pathlib import Path
-from openpyxl import Workbook
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  full_name VARCHAR(150) NOT NULL,
+  email VARCHAR(150) UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-base_dir = Path(__file__).resolve().parent.parent
-json_file = base_dir / 'apps' / 'api' / 'src' / 'templates' / 'finance-template.json'
-output_file = base_dir / 'exports' / 'finance-report.xlsx'
+CREATE TABLE IF NOT EXISTS transactions (
+  id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES users(id) ON DELETE CASCADE,
+  type VARCHAR(20) NOT NULL CHECK (type IN ('income', 'expense', 'saving', 'investment')),
+  category VARCHAR(100) NOT NULL,
+  amount NUMERIC(15,2) NOT NULL,
+  note TEXT,
+  transaction_date DATE NOT NULL DEFAULT CURRENT_DATE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-with json_file.open('r', encoding='utf-8') as f:
-    data = json.load(f)
+CREATE TABLE IF NOT EXISTS budgets (
+  id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES users(id) ON DELETE CASCADE,
+  category VARCHAR(100) NOT NULL,
+  monthly_limit NUMERIC(15,2) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-output_file.parent.mkdir(parents=True, exist_ok=True)
+CREATE TABLE IF NOT EXISTS learning_schedule (
+  id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES users(id) ON DELETE CASCADE,
+  language VARCHAR(30) NOT NULL,
+  topic VARCHAR(150) NOT NULL,
+  day_of_week VARCHAR(20) NOT NULL,
+  start_time TIME NOT NULL,
+  end_time TIME NOT NULL,
+  level VARCHAR(30) DEFAULT 'Beginner',
+  progress INT DEFAULT 0
+);
 
-wb = Workbook()
-ws = wb.active
-ws.title = 'Finance'
+CREATE TABLE IF NOT EXISTS reminders (
+  id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES users(id) ON DELETE CASCADE,
+  title VARCHAR(200) NOT NULL,
+  reminder_time TIME NOT NULL,
+  enabled BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-ws.append(['Month', 'Balance', 'Transactions Total'])
-ws.append(['This Month', data['balance'], sum(item['amount'] for item in data['transactions'])])
-
-ws2 = wb.create_sheet('Learning')
-ws2.append(['Language', 'Topic', 'Time', 'Progress'])
-for item in data['learning']:
-    ws2.append([item['language'], item['topic'], item['time'], item['progress']])
-
-wb.save(output_file)
-print(f'Excel file created: {output_file}')
+CREATE TABLE IF NOT EXISTS learning_materials (
+  id SERIAL PRIMARY KEY,
+  language VARCHAR(30) NOT NULL,
+  level VARCHAR(30) NOT NULL,
+  title VARCHAR(200) NOT NULL,
+  content TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

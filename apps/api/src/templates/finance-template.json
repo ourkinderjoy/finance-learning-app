@@ -1,14 +1,34 @@
-{
-  "balance": 8450000,
-  "transactions": [
-    { "id": 1, "type": "Income", "category": "Salary", "amount": 4000000 },
-    { "id": 2, "type": "Expense", "category": "Rent", "amount": 1400000 },
-    { "id": 3, "type": "Expense", "category": "Food", "amount": 850000 },
-    { "id": 4, "type": "Investment", "category": "Mutual Fund", "amount": 550000 }
-  ],
-  "learning": [
-    { "language": "English", "topic": "Daily Conversation", "time": "07:30 - 08:00", "progress": 78 },
-    { "language": "Deutsch", "topic": "Grammar + Vocabulary", "time": "18:30 - 19:00", "progress": 65 },
-    { "language": "Mandarin", "topic": "Pinyin + Hanzi", "time": "20:00 - 20:30", "progress": 71 }
-  ]
-}
+import json
+from pathlib import Path
+from openpyxl import Workbook
+
+base_dir = Path(__file__).resolve().parent.parent
+source = base_dir / 'apps' / 'api' / 'src' / 'templates' / 'finance-template.json'
+output = base_dir / 'exports' / 'finance-report.xlsx'
+
+output.parent.mkdir(parents=True, exist_ok=True)
+
+with source.open('r', encoding='utf-8') as f:
+    data = json.load(f)
+
+wb = Workbook()
+ws = wb.active
+ws.title = 'Finance'
+ws.append(['Category', 'Value'])
+ws.append(['Balance', data.get('balance', 0)])
+ws.append(['Monthly Income', data.get('monthlyIncome', 0)])
+ws.append(['Monthly Expense', data.get('monthlyExpense', 0)])
+ws.append(['Monthly Savings', data.get('monthlySavings', 0)])
+
+ws2 = wb.create_sheet('Transactions')
+ws2.append(['Type', 'Category', 'Amount', 'Note', 'Date'])
+for tx in data.get('transactions', []):
+    ws2.append([tx.get('type'), tx.get('category'), tx.get('amount'), tx.get('note', ''), tx.get('date', '')])
+
+ws3 = wb.create_sheet('Learning')
+ws3.append(['Language', 'Topic', 'Time', 'Progress'])
+for item in data.get('learning', []):
+    ws3.append([item.get('language'), item.get('topic'), item.get('time'), item.get('progress')])
+
+wb.save(output)
+print(f'Excel file berhasil dibuat: {output}')
